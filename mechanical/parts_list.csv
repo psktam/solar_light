@@ -1,0 +1,10 @@
+Part,Filename,Description,Product Page
+small miter,small_bevel.sldprt,Small miter gear for transferring output direction,http://shop.sdp-si.com/catalog/product/?id=A_1M_4MYZ05
+drive motor,pololu_micro_motor.sldprt,Small metal gearmotor for driving rings. This does not have an encoder,https://www.pololu.com/product/4795
+set screws,N/A,set screws for gears. Pack of 50,https://www.mcmaster.com/94355a080
+bushings for output shaft,bushing_3mm,"bearing surface for output shaft. Maybe unnecessary, but why not?",https://www.mcmaster.com/6659k64
+big gear,big_gear2.sldprt,transmits power to the big ring,http://shop.sdp-si.com/catalog/product/?id=A_1P_2MYD08020A
+ball bearings,bearings.SLDPRT,for custom rollers. This'll be great.,https://www.mcmaster.com/9291k45
+motor brushes,,get power to the lights,https://www.amazon.com/Carbon-Brushes-Compatible-Repairing-Electric/dp/B07GNFC5Z3/ref=pd_sbs_328_4/140-3720402-4060158?_encoding=UTF8&pd_rd_i=B07GNFC5Z3&pd_rd_r=88d02c31-8a78-4a1f-9bdf-b439a8ec8554&pd_rd_w=oHxvV&pd_rd_wg=k03nB&pf_rd_p=7cd8f929-4345-4bf2-a554-7d7588b3dd5f&pf_rd_r=MD3RNTQVY3YV4NWDWJK0&psc=1&refRID=MD3RNTQVY3YV4NWDWJK0
+spacer for bearings,spacer.SLDPRT,for mounting bearings on ,"https://www.grainger.com/category/fasteners/spacers-and-standoffs/standoffs/female-female-round-standoffs?attrs=Outside+Dia.|5%2F16""&filters=attrs"
+threaded rods,N/A,for connecting spacers together. May also need washers. Link is for pack of 50,https://www.grainger.com/product/GRAINGER-APPROVED-Fully-Threaded-Stud-10U513
