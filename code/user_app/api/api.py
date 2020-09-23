@@ -17,7 +17,7 @@ def set_speed(planet: str, speed: int):
 
 @api.route('/get_speed/<planet>')
 def get_speed(planet: str):
-    planet_enum = Planet(planet)
+    planet_enum = Planet(planet.lower())
     return {planet: sm.get_speed(planet_enum)}
 
 
@@ -31,7 +31,7 @@ def get_color(planet: str):
 @api.route('/set_color/<planet>/<rgbw_hex>')
 def set_color(planet: str, rgbw_hex: str):
     """Set the color of the planet"""
-    planet_enum = Planet(planet)
+    planet_enum = Planet(planet.lower())
     rgbw_hex = rgbw_hex.lower()
     red = int(rgbw_hex[:2], 16)
     green = int(rgbw_hex[2:4], 16)
