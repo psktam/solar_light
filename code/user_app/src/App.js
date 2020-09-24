@@ -33,31 +33,50 @@ class PlanetContainer extends React.Component {
     this.state = {};
 
     for (var planet of planets){
-      api.get_speed(planet).then(
-        resp=> {
-          this.setState((state, props) => {
-            console.log("initializing speed for ", planet);
-            var key = planet + '.speed';
-            return {[key]: resp[planet]};
-          });
-        }); 
+      api.get_speed(planet).then(((_planet)=>{
+        return (resp => {
+	  var key = _planet + '.speed';
+	  var speed = resp[_planet];
+	  this.setState({[key]: speed});
+	});
+      })(planet));
 
       api.get_color(planet).then(((_planet)=>{
         return (resp => {
-          this.setState((state, props) => {
-            console.log(resp);
-            console.log("Initializing color for ", _planet);
-            var key = _planet + '.color';
-            var [red, green, blue, white] = resp[_planet];
-            var color_string = this.color_as_hex_string(
-              red, green, blue, white);
-            return {[key]: color_string}
-          });
+	  var key = _planet + '.color';
+	  var [red, green, blue, white] = resp[_planet];
+	  var color_string = shared.color_as_hex_string(
+	    red, green, blue, white);
+	  var update = {[key]: color_string};
+	  console.log("Initializing ", _planet, " color to ", color_string);
+	  this.setState({[key]: color_string});
         });})(planet));
     }
   }
 
+  create_speed_cb(planet){
+    var key = planet + '.speed';
+    
+    return (speed) => {
+      this.setState({[key]: speed});
+      api.set_speed(planet, speed);
+      console.log("Setting ", planet, " to ", speed);
+    };
+  }
+
+  create_color_cb(planet){
+    var key = planet + '.color';
+
+    return (red, green, blue, white) => {
+      
+      var color_string = shared.color_as_hex_string(red, green, blue, white);
+      this.setState({[key]: color_string});
+      api.set_color(planet, red, green, blue, white);
+    };
+  }
+
   render (){
+
     return (
       <Table>
         <tbody>
@@ -74,7 +93,9 @@ class PlanetContainer extends React.Component {
           <PlanetController eventKey="0" name="Mercury" 
                             color={this.state["Mercury.color"]}
                             speed={this.state["Mercury.speed"]}
-                            planetColor="#d8d8d8"/>
+                            planetColor="#d8d8d8"
+	    		    onSpeedChange={this.create_speed_cb("Mercury")}
+			    onColorChange={this.create_color_cb("Mercury")}/>
           <PlanetController eventKey="1" name="Venus"
                             color={this.state["Venus.color"]}
                             speed={this.state["Venus.speed"]}
@@ -112,31 +133,18 @@ class PlanetContainer extends React.Component {
 
 class PlanetController extends React.Component {
   constructor(props) {
-
     super(props);
-    this.wrapper = React.createRef();
+    this.handle_color_change = this.handle_color_change.bind(this);
+    this.handle_speed_change = this.handle_speed_change.bind(this);
+  }
 
-    // Initialize speed and color from the API
-    var planet = this.props.name;
-    api.get_speed(planet).then(
-      resp => {
-        this.setState((state, props) => { 
-          return {speed: resp[planet]};
-        })
-      });
-    api.get_color(planet).then(
-      resp => {
-        this.setState((state, props) => {
-          var [red, green, blue, white] = resp[planet];
-          var color_string = shared.color_as_hex_string(
-            red, green, blue, white);
-          return {color: color_string};
-        });
-      });
+  handle_speed_change(speed) {
+    this.props.onSpeedChange(speed);
+  }
 
-    this.state = {};
-
-    console.log(planet, this.state);
+  handle_color_change(new_color) {
+    var [red, green, blue, white] = this.hex_to_color(new_color.color);
+    this.props.onColorChange(red, green, blue, white);
   }
 
   hex_to_color(rgb_string){
@@ -175,30 +183,20 @@ class PlanetController extends React.Component {
             </ButtonGroup>
           </td>
           <td>
-            <ColorPicker color={this.state.color} 
+            <ColorPicker color={this.props.color} 
                          placement="bottomRight" 
-                         onChange={(value) => {
-              var [red, green, blue, white] = this.hex_to_color(value.color);
-              self.setState((state, props) => {
-                return {color: value.color};
-              });
-              api.set_color(this.props.name, red, green, blue, white);
-            }}/>
+                         onChange={this.handle_color_change}/>
           </td>
         </tr>
         <tr>
           <td>
-            Speed {this.state.speed - 128}
+            Speed {this.props.speed - 128}
           </td>
           <td colSpan="2">
             <Slider min={0} max={256} step={16} 
                     startPoint={128} 
-                    value={this.state['speed']}
-                    onChange={value => {
-                      this.setState((state, props) => {
-                        api.set_speed(this.props.name, value); 
-                        return {speed: value};});
-                      }} />
+                    value={this.props['speed']}
+                    onChange={this.handle_speed_change} />
           </td>
         </tr>
       </div>
