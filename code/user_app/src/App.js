@@ -97,8 +97,8 @@ class PlanetContainer extends React.Component {
                color={self.state[planet + '.color']}
                speed={self.state[planet + '.speed']}
                planetColor={color_mapping[planet]}
-               onSpeedChange={this.create_speed_cb(planet)}
-               onColorChange={this.create_color_cb(planet)}/>);
+               onSpeedChange={self.create_speed_cb(planet)}
+               onColorChange={self.create_color_cb(planet)}/>);
     });
 
     return (
