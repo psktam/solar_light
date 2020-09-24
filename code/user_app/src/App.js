@@ -36,22 +36,24 @@ class PlanetContainer extends React.Component {
       api.get_speed(planet).then(
         resp=> {
           this.setState((state, props) => {
+            console.log("initializing speed for ", planet);
             var key = planet + '.speed';
             return {[key]: resp[planet]};
           });
         }); 
 
-      api.get_color(planet).then(
-        resp=> {
+      api.get_color(planet).then(((_planet)=>{
+        return (resp => {
           this.setState((state, props) => {
             console.log(resp);
-            var key = planet + '.color';
-            var [red, green, blue, white] = resp[planet];
+            console.log("Initializing color for ", _planet);
+            var key = _planet + '.color';
+            var [red, green, blue, white] = resp[_planet];
             var color_string = this.color_as_hex_string(
               red, green, blue, white);
             return {[key]: color_string}
-          })
-        });
+          });
+        });})(planet));
     }
   }
 
