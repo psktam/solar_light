@@ -17,22 +17,25 @@ import api from './api.js';
 import shared from './shared.js';
 
 
+var _PLANETS = ["Mercury", 
+                "Venus",
+                "Earth",
+                "Mars",
+                "Jupiter",
+                "Saturn",
+                "Uranus",
+                "Neptune"];
+                // Sorry pluto :(
+
+
 class PlanetContainer extends React.Component {
 
   constructor(props) {
     super(props);
     // Initialize speed and color from API
-    var planets = ["Mercury", 
-                   "Venus",
-                   "Earth",
-                   "Mars",
-                   "Jupiter",
-                   "Saturn",
-                   "Uranus",
-                   "Neptune"];
     this.state = {};
 
-    for (var planet of planets){
+    for (var planet of _PLANETS){
       api.get_speed(planet).then(((_planet)=>{
         return (resp => {
 	  var key = _planet + '.speed';
@@ -77,6 +80,27 @@ class PlanetContainer extends React.Component {
 
   render (){
 
+    var color_mapping = {
+      "Mercury": "#d8d8d8",
+      "Venus": "#695a33",
+      "Earth": "#005dff",
+      "Mars": "#ff0000",
+      "Jupiter": "#a85838",
+      "Saturn": "#f2f56b",
+      "Uranus": "#00ddb1",
+      "Neptune": "#306dff"
+    };
+    var planets = [..._PLANETS];
+    var self = this;
+    var controller_list = planets.map(function (planet) {
+      return (<PlanetController name={planet}
+               color={self.state[planet + '.color']}
+               speed={self.state[planet + '.speed']}
+               planetColor={color_mapping[planet]}
+               onSpeedChange={this.create_speed_cb(planet)}
+               onColorChange={this.create_color_cb(planet)}/>);
+    });
+
     return (
       <Table>
         <tbody>
@@ -90,40 +114,7 @@ class PlanetContainer extends React.Component {
             </td>
           </tr>
           
-          <PlanetController eventKey="0" name="Mercury" 
-                            color={this.state["Mercury.color"]}
-                            speed={this.state["Mercury.speed"]}
-                            planetColor="#d8d8d8"
-	    		    onSpeedChange={this.create_speed_cb("Mercury")}
-			    onColorChange={this.create_color_cb("Mercury")}/>
-          <PlanetController eventKey="1" name="Venus"
-                            color={this.state["Venus.color"]}
-                            speed={this.state["Venus.speed"]}
-                            planetColor="#695a33"/>
-          <PlanetController eventKey="2" name="Earth"
-                            color={this.state["Earth.color"]}
-                            speed={this.state["Earth.speed"]}
-                            planetColor="#005dff"/>
-          <PlanetController eventKey="3" name="Mars"
-                            color={this.state["Mars.color"]}
-                            speed={this.state["Mars.speed"]}
-                            planetColor="#ff0000"/>
-          <PlanetController eventKey="4" name="Jupiter"
-                            color={this.state["Jupiter.color"]}
-                            speed={this.state["Jupiter.speed"]}
-                            planetColor="#a85838"/>
-          <PlanetController eventKey="5" name="Saturn"
-                            color={this.state["Saturn.color"]}
-                            speed={this.state["Saturn.speed"]}
-                            planetColor="#f2f56b"/>
-          <PlanetController eventKey="6" name="Uranus"
-                            color={this.state["Uranus.color"]}
-                            speed={this.state["Uranus.speed"]}
-                            planetColor="#00ddb1"/>
-          <PlanetController eventKey="7" name="Neptune"
-                            color={this.state["Neptune.color"]}
-                            speed={this.state["Neptune.speed"]}
-                            planetColor="#306dff"/>
+          {controller_list}
         </tbody>
       </Table>
     );
