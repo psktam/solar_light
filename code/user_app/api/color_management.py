@@ -2,6 +2,7 @@ import json
 import os
 
 from shared import Planet
+from light_control import LIGHT_CONTROLLERS
 
 
 COLORS = {
@@ -32,7 +33,6 @@ def initialize():
         COLORS[key] = val
 
 
-
 def to_disk():
     """Invoke to save parameters to disk"""
     with open(_PARAM_FILE, 'w') as fh:
@@ -42,6 +42,9 @@ def to_disk():
 def set_color(planet, red, grn, blu, wht):
     """Each color is 8-bit"""
     COLORS[planet] = (red, grn, blu, wht)
+    # Convert these 8-bit colors to 12-bit for the drivers
+    as_12_bit = [int(clr * 4096.0 / 256.0) for clr in COLORS[planet]]
+    LIGHT_CONTROLLERS[planet].set_color(*as_12_bit)
 
 
 def get_color(planet):
