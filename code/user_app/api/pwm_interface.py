@@ -43,12 +43,12 @@ class PWMInterface:
         Need to turn off sleep mode in order to actually 
         make PWM work.
         """
-        _BUS.write_i2c_block_data(self._address, 0x00, 0x00)
+        _BUS.write_i2c_block_data(self._address, 0x00, [0x00])
         self.sleeping = False
     
     def sleep(self):
         """Sleep the board, for whatever reason"""
-        _BUS.write_i2c_block_data(self._address, 0x00, 0x10)
+        _BUS.write_i2c_block_data(self._address, 0x00, [0x10])
         self.sleeping = True
     
     def set_time_on(self, pin_id, on_time:int):
@@ -73,8 +73,8 @@ class PWMInterface:
         off_high_addr, off_low_addr = self._off_registers[pin_id]
 
         time_on = _stitch_bytes(
-            _BUS.read_bytes(self._address, on_high_addr), 
-            _BUS.read_bytes(self._address, on_low_addr))
+            _BUS.read_byte_data(self._address, on_high_addr), 
+            _BUS.read_byte_data(self._address, on_low_addr))
         time_off = _stitch_bytes(
             _BUS.read_byte_data(self._address, off_high_addr),
             _BUS.read_byte_data(self._address, off_low_addr))

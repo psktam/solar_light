@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
-from .pwm_interface import PWMInterface
-from .shared import Planet
+from pwm_interface import PWMInterface
+from shared import Planet
 
 
 DRIVERS = {addr: PWMInterface(addr) for addr in [0x40, 0x41]}
