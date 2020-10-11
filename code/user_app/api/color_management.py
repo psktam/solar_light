@@ -28,7 +28,8 @@ def initialize():
     """Load parameters from disk, if they are there"""
     if os.path.exists(_PARAM_FILE):
         with open(_PARAM_FILE, 'r') as fh:
-            all_params = json.load(fh)
+            all_params = {Planet[key]: tuple(val)
+                          for key, val in json.load(fh).items()}
     else:
         all_params = COLORS.copy()
 
@@ -39,7 +40,7 @@ def initialize():
 def to_disk():
     """Invoke to save parameters to disk"""
     with open(_PARAM_FILE, 'w') as fh:
-        json.dump(COLORS, fh)
+        json.dump({key.name: list(val) for key, val in COLORS.items()}
 
 
 def set_color(planet, red, grn, blu, wht):

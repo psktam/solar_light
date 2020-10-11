@@ -7,9 +7,8 @@ from shared import Planet
 from speed_control import SPEED_CONTROLLERS
 
 
-# Tuples of (direction, speed)
 SPEEDS = {
-    planet: (0, 0)
+    planet: 0.0
     for planet in [Planet.Mercury, 
                    Planet.Venus,
                    Planet.Earth,
@@ -28,7 +27,7 @@ def initialize():
     """Load parameter file from disk if they are there"""
     if os.path.exists(_PARAM_FILE):
         with open(_PARAM_FILE, 'r') as fh:
-            all_params = {Planet[key]: tuple(val)
+            all_params = {Planet[key]: val
                           for key, val in json.load(fh).items()}
     else:
         all_params = SPEEDS.copy()
@@ -40,7 +39,7 @@ def initialize():
 def to_disk():
     """Invoke to save parameters to disk"""
     with open(_PARAM_FILE, 'w') as fh:
-        json.dump({key: list(val) for key, val in SPEEDS.items()})
+        json.dump({key.name: val for key, val in SPEEDS.items()})
 
 
 def set_speed(planet, speed):
@@ -53,3 +52,6 @@ def set_speed(planet, speed):
 
 def get_speed(planet):
     return SPEEDS[planet]
+
+
+initialize()
