@@ -1,3 +1,6 @@
+# API must go through this layer before it can actually interface with actual
+# hardware.
+
 import json 
 import os
 

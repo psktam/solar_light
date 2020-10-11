@@ -184,8 +184,8 @@ class PlanetController extends React.Component {
             Speed {this.props.speed - 128}
           </td>
           <td colSpan="2">
-            <Slider min={0} max={256} step={16} 
-                    startPoint={128} 
+            <Slider min={-100} max={100} step={10} 
+                    startPoint={0} 
                     value={this.props['speed']}
                     onChange={this.handle_speed_change} />
           </td>
