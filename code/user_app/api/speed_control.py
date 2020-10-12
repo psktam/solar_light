@@ -3,6 +3,7 @@ from shared import Planet
 
 
 DRIVER = PWMInterface(0x42)
+DRIVER.power_on()
 
 
 class SpeedController:
@@ -13,7 +14,8 @@ class SpeedController:
         self._dir_pin = dir_pin
 
     def set_rotation(self, cw:bool, speed:int):
-        cw_duty_cycle = (2 ** 12) * int(cw)
+        cw_duty_cycle = (2 ** 12 - 1) * int(cw)
+        print(f"Controller setting {self._speed_pin} to {speed} and {self._dir_pin} to {cw_duty_cycle}")
         DRIVER.set_time_off(self._dir_pin, cw_duty_cycle)
         DRIVER.set_time_off(self._speed_pin, speed)
     
@@ -29,11 +31,11 @@ class SpeedController:
 
 SPEED_CONTROLLERS = {
     Planet.Mercury: SpeedController(0, 1),
-    Planet.Venus: SpeedController(3, 4),
-    Planet.Earth: SpeedController(5, 6),
-    Planet.Mars: SpeedController(7, 8),
-    Planet.Jupiter: SpeedController(9, 10),
-    Planet.Saturn: SpeedController(11, 12),
-    Planet.Uranus: SpeedController(13, 14),
-    Planet.Neptune: SpeedController(15, 16)
+    Planet.Venus: SpeedController(2, 3),
+    Planet.Earth: SpeedController(4, 5),
+    Planet.Mars: SpeedController(6, 7),
+    Planet.Jupiter: SpeedController(8, 9),
+    Planet.Saturn: SpeedController(10, 11),
+    Planet.Uranus: SpeedController(12, 13),
+    Planet.Neptune: SpeedController(14, 15)
 }

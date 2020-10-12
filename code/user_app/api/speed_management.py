@@ -45,6 +45,7 @@ def to_disk():
 def set_speed(planet, speed):
     SPEEDS[planet] = speed
     # Convert speed, given in -100 to 100, to 12-bit direction and duty cycle
+    print(f"Set {planet} to {speed}")
     cw = speed > 0.0
     duty_cycle = int(round(abs(float(speed)) / 100.0 * 4096))
     SPEED_CONTROLLERS[planet].set_rotation(cw, duty_cycle)

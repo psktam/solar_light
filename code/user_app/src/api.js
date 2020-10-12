@@ -21,6 +21,7 @@ async function get_color(planet){
     // Returns a promise that contains the RGBW color spec for the planet
     var api_query = '/api/get_color/' + planet;
     const res = await fetch(api_query);
+    console.log(res);
     return await res.json();
 }
 

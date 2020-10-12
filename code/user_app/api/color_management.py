@@ -40,7 +40,7 @@ def initialize():
 def to_disk():
     """Invoke to save parameters to disk"""
     with open(_PARAM_FILE, 'w') as fh:
-        json.dump({key.name: list(val) for key, val in COLORS.items()}
+        json.dump({key.name: list(val) for key, val in COLORS.items()})
 
 
 def set_color(planet, red, grn, blu, wht):

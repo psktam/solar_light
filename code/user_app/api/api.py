@@ -11,7 +11,7 @@ api = Blueprint('api', __name__)
 @api.route('/set_speed/<planet>/<speed>')
 def set_speed(planet: str, speed: int):
     planet_enum = Planet(planet.lower())
-    sm.set_speed(planet_enum, speed)
+    sm.set_speed(planet_enum, float(speed))
     return {planet: sm.get_speed(planet_enum)}
 
 
