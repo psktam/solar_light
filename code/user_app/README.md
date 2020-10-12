@@ -1,3 +1,18 @@
+# Quick Start On the Raspberry Pi
+Under `src`, run:
+
+```bash
+npm start
+```
+
+Under `api`, run:
+
+```bash
+python3 -m flask run
+```
+
+# Auto-Generated Stuff from Create-React-App
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
