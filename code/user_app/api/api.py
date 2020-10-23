@@ -1,3 +1,4 @@
+import os
 from flask import Blueprint
 
 import color_management as cm

@@ -4,8 +4,13 @@
 import json 
 import os
 
-from shared import Planet
-from light_control import LIGHT_CONTROLLERS
+from shared import Planet, is_dev
+
+if not is_dev():
+    from light_control import LIGHT_CONTROLLERS
+else:
+    from collections import defaultdict
+    LIGHT_CONTROLLERS = defaultdict(lambda: None)
 
 
 COLORS = {
@@ -48,7 +53,8 @@ def set_color(planet, red, grn, blu, wht):
     COLORS[planet] = (red, grn, blu, wht)
     # Convert these 8-bit colors to 12-bit for the drivers
     as_12_bit = [int(clr * 4096.0 / 256.0) for clr in COLORS[planet]]
-    LIGHT_CONTROLLERS[planet].set_color(*as_12_bit)
+    if not is_dev():
+        LIGHT_CONTROLLERS[planet].set_color(*as_12_bit)
 
 
 def get_color(planet):

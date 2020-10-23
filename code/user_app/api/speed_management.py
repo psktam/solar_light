@@ -3,8 +3,13 @@
 import json
 import os
 
-from shared import Planet
-from speed_control import SPEED_CONTROLLERS
+from shared import Planet, is_dev
+
+if not is_dev():
+    from speed_control import SPEED_CONTROLLERS
+else:
+    from collections import defaultdict
+    SPEED_CONTROLLERS = defaultdict(lambda: None)
 
 
 SPEEDS = {
@@ -48,7 +53,8 @@ def set_speed(planet, speed):
     print(f"Set {planet} to {speed}")
     cw = speed > 0.0
     duty_cycle = int(round(abs(float(speed)) / 100.0 * 4096))
-    SPEED_CONTROLLERS[planet].set_rotation(cw, duty_cycle)
+    if not is_dev():
+        SPEED_CONTROLLERS[planet].set_rotation(cw, duty_cycle)
 
 
 def get_speed(planet):
