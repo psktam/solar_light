@@ -27,7 +27,36 @@ var _PLANETS = ["Mercury",
                 "Neptune"];
                 // Sorry pluto :(
 
+var _COLOR_MAPPING= {
+  "Mercury": "#d8d8d8",
+  "Venus": "#695a33",
+  "Earth": "#005dff",
+  "Mars": "#ff0000",
+  "Jupiter": "#a85838",
+  "Saturn": "#f2f56b",
+  "Uranus": "#00ddb1",
+  "Neptune": "#306dff"
+};
 
+
+function hex_to_color(rgb_string){
+  var red = parseInt(rgb_string.slice(1, 3), 16);
+  var green = parseInt(rgb_string.slice(3, 5), 16);
+  var blue = parseInt(rgb_string.slice(5, 7), 16);
+  var white = 0;
+
+  if ((red === green) && (green === blue)){
+    white = red;
+    red = 0;
+    green = 0;
+    blue = 0;
+  }
+
+  return [red, green, blue, white];
+}
+
+
+// This is the container class that holds all of the PlanetControllers within it
 class PlanetContainer extends React.Component {
 
   constructor(props) {
@@ -78,25 +107,54 @@ class PlanetContainer extends React.Component {
     };
   }
 
-  render (){
+  create_reading_mode_cb(){
+    // Turn all lights to white at full brightness
+    return () => {
+      var color_map = {};
+      for (var planet of _PLANETS){
+        var key = planet + '.color';
+        color_map[key] = '#ffffff';
+        api.set_color(planet, 0, 0, 0, 255);
+      }
+      this.setState(color_map);
+    }
+  }
 
-    var color_mapping = {
-      "Mercury": "#d8d8d8",
-      "Venus": "#695a33",
-      "Earth": "#005dff",
-      "Mars": "#ff0000",
-      "Jupiter": "#a85838",
-      "Saturn": "#f2f56b",
-      "Uranus": "#00ddb1",
-      "Neptune": "#306dff"
-    };
+  create_planet_mode_cb(){
+    // Turn all lights to their planet color
+    return () => {
+      var color_mapping = {}
+      for (var planet of _PLANETS){
+        var key = planet + '.color';
+        var [red, green, blue, white] = hex_to_color(_COLOR_MAPPING[planet]);
+        api.set_color(planet, red, green, blue, white);
+        color_mapping[key] = _COLOR_MAPPING[planet]
+      }
+      this.setState(color_mapping);
+    }
+  }
+
+  create_stop_cb(){
+    // Stop all planets
+    return () => {
+      var speed_map = {};
+      for (var planet of _PLANETS){
+        var key = planet + '.speed';
+        api.set_speed(planet, 0);
+        speed_map[key] = 0.0;
+      }
+      this.setState(speed_map);
+    }
+  }
+
+  render (){
     var planets = [..._PLANETS];
     var self = this;
     var controller_list = planets.map(function (planet) {
       return (<PlanetController name={planet}
                color={self.state[planet + '.color']}
                speed={self.state[planet + '.speed']}
-               planetColor={color_mapping[planet]}
+               planetColor={_COLOR_MAPPING[planet]}
                onSpeedChange={self.create_speed_cb(planet)}
                onColorChange={self.create_color_cb(planet)}/>);
     });
@@ -107,9 +165,12 @@ class PlanetContainer extends React.Component {
           <tr>
             <td colSpan="3" style={{"text-align": "center"}}>
               <ButtonGroup className="mr-2" style={{"text-align": "center"}}>
-                <Button variant="outline-primary">Reading Mode</Button>
-                <Button variant="outline-primary">Planet Mode</Button>
-                <Button variant="outline-primary">Stop All</Button>
+                <Button variant="outline-primary"
+                        onClick={self.create_reading_mode_cb()}>Reading Mode</Button>
+                <Button variant="outline-primary"
+                        onClick={self.create_planet_mode_cb()}>Planet Mode</Button>
+                <Button variant="outline-primary"
+                        onClick={self.create_stop_cb()}>Stop All</Button>
               </ButtonGroup>
             </td>
           </tr>
@@ -134,24 +195,8 @@ class PlanetController extends React.Component {
   }
 
   handle_color_change(new_color) {
-    var [red, green, blue, white] = this.hex_to_color(new_color.color);
+    var [red, green, blue, white] = hex_to_color(new_color.color);
     this.props.onColorChange(red, green, blue, white);
-  }
-
-  hex_to_color(rgb_string){
-    var red = parseInt(rgb_string.slice(1, 3), 16);
-    var green = parseInt(rgb_string.slice(3, 5), 16);
-    var blue = parseInt(rgb_string.slice(5, 7), 16);
-    var white = 0;
-
-    if ((red === green) && (green === blue)){
-      white = red;
-      red = 0;
-      green = 0;
-      blue = 0;
-    }
-
-    return [red, green, blue, white];
   }
 
   render() {
@@ -165,10 +210,15 @@ class PlanetController extends React.Component {
           </td>
           <td style={{width: "210px"}}>
             <ButtonGroup>
-              <Button variant="primary">
+              <Button variant="primary"
+                      onClick={()=>this.props.onColorChange(0, 0, 0, 255)}>
                 White
               </Button>
-              <Button variant="primary">
+              <Button variant="primary"
+                      onClick={()=>{
+                        var [red, green, blue, white] = hex_to_color(
+                          self.props.planetColor);
+                        self.props.onColorChange(red, green, blue, white);}}>
                 Planet Color
               </Button>
             </ButtonGroup>
