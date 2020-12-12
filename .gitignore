@@ -341,3 +341,6 @@ healthchecksdb
 
 # Any vscode file
 **/.vscode*
+
+# Ignore gcode
+**/.gcode
